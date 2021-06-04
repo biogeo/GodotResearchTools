@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://gaze/Circle.gd" type="Script" id=1]
+[ext_resource path="res://gaze/Background.gd" type="Script" id=2]
+[ext_resource path="res://gaze/Eyelink.py" type="Script" id=3]
+[ext_resource path="res://gaze/CalibrationScreen.gd" type="Script" id=4]
+
+[node name="CalibrationScreen" type="Node2D"]
+script = ExtResource( 4 )
+
+[node name="Background" type="ColorRect" parent="."]
+margin_right = 1057.0
+margin_bottom = 633.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0.498039, 0.498039, 0.498039, 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TargetSpot" type="Node2D" parent="."]
+position = Vector2( 528.295, 303.893 )
+scale = Vector2( 0.830357, 0.887324 )
+script = ExtResource( 1 )
+radius = 20.0
+color = Color( 0.054902, 0.501961, 0.933333, 1 )
+
+[node name="Eyelink" type="Node" parent="."]
+script = ExtResource( 3 )
