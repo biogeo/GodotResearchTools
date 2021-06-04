@@ -9,10 +9,11 @@ var is_calibration_active = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	Eyelink.open()
 	$TargetSpot.visible = false
-	$Eyelink.connect('enter_mode_target', self, 'on_calibration_ready')
-	$Eyelink.connect('exit_mode_target', self, 'on_calibration_finished')
-	$Eyelink.enter_calibration()
+	Eyelink.connect('enter_mode_target', self, 'on_calibration_ready')
+	Eyelink.connect('exit_mode_target', self, 'on_calibration_finished')
+	Eyelink.enter_calibration()
 
 func on_calibration_ready():
 	is_calibration_active = true
@@ -24,10 +25,11 @@ func on_calibration_finished():
 func _physics_process(delta):
 	if not is_calibration_active:
 		return
-	$TargetSpot.position = $Eyelink.get_cal_target_position()
+	print(Eyelink.get_cal_target_position())
+	$TargetSpot.position = Eyelink.get_cal_target_position()
 	if Input.is_action_just_pressed('eyecal_next_step'):
 		if $TargetSpot.visible:
-			$Eyelink.accept_cal_target()
+			Eyelink.accept_cal_target()
 			$TargetSpot.visible = false
 		else:
 			$TargetSpot.visible = true
@@ -35,6 +37,6 @@ func _physics_process(delta):
 		if $TargetSpot.visible:
 			$TargetSpot.visible = false
 		else:
-			$Eyelink.previous_cal_target()
+			Eyelink.previous_cal_target()
 			$TargetSpot.visible = false
 	

@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://gaze/Circle.gd" type="Script" id=1]
+[ext_resource path="res://gaze/Circle2D.gd" type="Script" id=1]
 [ext_resource path="res://gaze/Background.gd" type="Script" id=2]
-[ext_resource path="res://gaze/Eyelink.py" type="Script" id=3]
 [ext_resource path="res://gaze/CalibrationScreen.gd" type="Script" id=4]
 
 [node name="CalibrationScreen" type="Node2D"]
@@ -25,6 +24,3 @@ scale = Vector2( 0.830357, 0.887324 )
 script = ExtResource( 1 )
 radius = 20.0
 color = Color( 0.054902, 0.501961, 0.933333, 1 )
-
-[node name="Eyelink" type="Node" parent="."]
-script = ExtResource( 3 )

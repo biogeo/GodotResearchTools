@@ -23,11 +23,11 @@ def generate_arbitrary_edf_filename():
 	overwritten. This does that by just base36-encoding the current time.
 	"""
 	alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-	t = time.time()
+	t = int(time.time())
 	s = ''
 	while t != 0:
 		t,i = divmod(t, len(alphabet))
-		s = alpha[i] + s
+		s = alphabet[i] + s
 	return s[-8:]
 
 mode_bits = {
@@ -40,7 +40,7 @@ mode_bits = {
 	}
 
 @exposed
-class Eyelink(Node):
+class Eyelink(godot.Node):
 
 	# Parameters
 	ip_address = export(str, default='100.1.1.1')
@@ -69,7 +69,6 @@ class Eyelink(Node):
 
 	def _ready(self):
 		"""
-
 		"""
 		pass
 
@@ -83,23 +82,24 @@ class Eyelink(Node):
 			modes_exited = self.known_mode & ~new_mode
 			self.known_mode = new_mode
 
-			if (modes_entered & pylink.IN_SETUP_MODE) and
-					self.expected_mode & pylink.IN_TARGET_MODE:
+			if ( (modes_entered & pylink.IN_SETUP_MODE) and
+					(self.expected_mode & pylink.IN_TARGET_MODE)
+					):
 				# We are switching to calibration mode, and have just
 				# successfully entered setup mode on the way there
-				cls.el.sendKeybutton(ord('c'), 0, pylink.KB_PRESS)
+				self.el.sendKeybutton(ord('c'), 0, pylink.KB_PRESS)
 
 			for flag, mode in mode_bits.items():
-				if flag & exiting_mode:
+				if flag & modes_exited:
 					self.call('emit_signal', 'exit_' + mode)
-				if flag & entering_mode:
+				if flag & modes_entered:
 					self.call('emit_signal', 'enter_' + mode)
 
-	def connect(self):
+	def open(self):
 		if self.edf_filename is None:
 			self.edf_filename = generate_arbitrary_edf_filename()
-		self.el = pylink.EyeLink(self.ip_address)
-		self.el.openDataFile(self.edf_filename)
+		self.el = pylink.EyeLink(str(self.ip_address))
+		self.el.openDataFile(str(self.edf_filename))
 		self.known_mode = self.el.getCurrentMode()
 		self.expected_mode = self.known_mode
 
@@ -139,7 +139,7 @@ class Eyelink(Node):
 		if self.el is None or not self.el.isConnected():
 			return
 		self.el.startSetup()
-		self.el.expected_mode = pylink.IN_SETUP_MODE
+		self.expected_mode = pylink.IN_SETUP_MODE
 
 	def enter_calibration(self):
 		if self.el is None or not self.el.isConnected():
@@ -147,35 +147,40 @@ class Eyelink(Node):
 		if self.known_mode & pylink.IN_SETUP_MODE:
 			# We are already in setup mode, just need to change to calibration
 			self.el.sendKeybutton(ord('c'), 0, pylink.KB_PRESS)
-			self.el.expected_mode |= pylink.IN_TARGET_MODE
+			self.expected_mode |= pylink.IN_TARGET_MODE
 		else:
 			# We are not yet in setup mode, so we need to go there first
 			self.el.startSetup()
-			self.el.expected_mode = MODE_CALIBRATION
+			self.expected_mode = MODE_CALIBRATION
 
 	def cancel_calibration(self):
-		if self.el is not None and
+		if ( self.el is not None and
 				self.el.isConnected() and
-				self.known_mode == MODE_CALIBRATION:
+				self.known_mode == MODE_CALIBRATION
+				):
 			self.el.sendKeybutton(SPECIAL_KEYS['escape'], 0, pylink.KB_PRESS)
 
 	def accept_cal_target(self):
-		if self.el is not None and
+		if ( self.el is not None and
 				self.el.isConnected() and
-				self.known_mode == MODE_CALIBRATION:
+				self.known_mode == MODE_CALIBRATION
+				):
 			self.el.sendKeybutton(SPECIAL_KEYS['return'], 0, pylink.KB_PRESS)
 
 	def previous_cal_target(self):
-		if self.el is not None and
+		if ( self.el is not None and
 				self.el.isConnected() and
-				self.known_mode == MODE_CALIBRATION:
+				self.known_mode == MODE_CALIBRATION
+				):
 			self.el.sendKeybutton(SPECIAL_KEYS['backspace'], 0, pylink.KB_PRESS)
 
 	def get_cal_target_position(self):
-		if self.el is not None and
+		if ( self.el is not None and
 				self.el.isConnected() and
-				self.known_mode & pylink.IN_TARGET_MODE:
-			return self.el.getTargetPositionAndState()[1:2]
+				self.known_mode & pylink.IN_TARGET_MODE
+				):
+			print(self.el.getTargetPositionAndState())
+			return godot.Vector2(*self.el.getTargetPositionAndState()[1:2])
 
 	def start_recording(self):
 		if self.el is not None:
