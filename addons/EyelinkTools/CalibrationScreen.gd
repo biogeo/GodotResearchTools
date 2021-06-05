@@ -13,6 +13,7 @@ func _ready():
 	$TargetSpot.visible = false
 	Eyelink.connect('enter_mode_target', self, 'on_calibration_ready')
 	Eyelink.connect('exit_mode_target', self, 'on_calibration_finished')
+	Eyelink.set_screen_dimensions()
 	Eyelink.enter_calibration()
 
 func on_calibration_ready():
@@ -25,7 +26,6 @@ func on_calibration_finished():
 func _physics_process(delta):
 	if not is_calibration_active:
 		return
-	print(Eyelink.get_cal_target_position())
 	$TargetSpot.position = Eyelink.get_cal_target_position()
 	if Input.is_action_just_pressed('eyecal_next_step'):
 		if $TargetSpot.visible:

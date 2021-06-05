@@ -67,11 +67,6 @@ class Eyelink(godot.Node):
 	known_mode = 0
 	expected_mode = 0
 
-	def _ready(self):
-		"""
-		"""
-		pass
-
 	def _physics_process(self, delta):
 		"""
 		Regular polling of the eye tracker when needed.
@@ -108,32 +103,23 @@ class Eyelink(godot.Node):
 			return
 		window_pos = godot.OS.get_window_position()
 		window_size = godot.OS.get_window_size()
-
-		self.el.sendCommand(
-			'screen_pixel_coords = {} {} {} {}'.format(
-				window_pos[0], window_pos[1],
-				window_size[0]-1, window_size[1]-1
-				)
-			)
-		self.el.sendMessage(
-			'DISPLAY_COORDS {} {} {} {}'.format(
-				window_pos[0], window_pos[1],
-				window_size[0]-1, window_size[1]-1
-				)
-			)
+		
+		pixel_coords_message = (
+			"0 0 {} {}".format(window_size.x-1, window_size.y-1) )
+		
+		self.el.sendCommand("screen_pixel_coords = " + pixel_coords_message)
+		self.el.sendMessage("DISPLAY_COORDS " + pixel_coords_message)
 
 		if screen_size is not None:
 			self.el.sendCommand(
 				'screen_phys_coords = {} {} {} {}'.format(
-					-screen_size[0]/2, -screen_size[1]/2,
-					screen_size[0]/2, screen_size[1]/2
+					-screen_size.x/2, -screen_size.y/2,
+					screen_size.x/2, screen_size.y/2
 					)
 				)
 
 		if screen_distance is not None:
-			self.el.sendCommand(
-				'screen_distance = {}'.format(screen_distance)
-				)
+			self.el.sendCommand("screen_distance = {}".format(screen_distance))
 
 	def enter_setup(self):
 		if self.el is None or not self.el.isConnected():
@@ -179,8 +165,7 @@ class Eyelink(godot.Node):
 				self.el.isConnected() and
 				self.known_mode & pylink.IN_TARGET_MODE
 				):
-			print(self.el.getTargetPositionAndState())
-			return godot.Vector2(*self.el.getTargetPositionAndState()[1:2])
+			return godot.Vector2(*self.el.getTargetPositionAndState()[1:3])
 
 	def start_recording(self):
 		if self.el is not None:
