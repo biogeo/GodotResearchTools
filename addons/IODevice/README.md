@@ -6,10 +6,10 @@ control a variety of research hardware. The Arduino project is available as
 
 ## Installation
 
-1. This depends upon `godot-python`: install this plugin using the Godot Asset
+1. This depends upon `PythonScript`: install this plugin using the Godot Asset
     Library (or your preferred method).
 2. Install the Python `pyserial` module. From the Python executable installed
-    by `godot-python` (in your project's addons folder), run
+    by `PythonScript` (in your project's addons folder), run
 
 ```
 $ python -m pip install pyserial

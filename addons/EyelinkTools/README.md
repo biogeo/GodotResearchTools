@@ -15,12 +15,12 @@ studies is probably inadequate. Use at your own risk.
 
 EyelinkTools must be installed into each Godot project that will use it.
 
-1. Install the `godot-python` plugin for your project. Using the Godot Asset
+1. Install the `PythonScript` plugin for your project. Using the Godot Asset
     Library is recommended for a quick and easy installation.
 2. Install the `Pylink` Python library from SR Research and its dependencies.
     SR Research keeps their proprietary SDK, including Pylink, fairly restricted
     so unfortunately it cannot be redistributed here. Make sure that the version
-    of Pylink matches the Python version bundled with godot-python. The versions
+    of Pylink matches the Python version bundled with PythonScript. The versions
     made available by SR Research within their support forum may lag behind
     the latest Python version by several releases, but if asked nicely they may
     be willing to provide you with a more up-to-date version of the library via
@@ -43,7 +43,7 @@ singleton script. Any GDScript or Python script can access `Eyelink`. In Godot
 3.3, this can be accessed effectively as a global within GDScript; simply refer
 to `Eyelink`. In older versions of Godot, you may need to call
 `Eyelink = get_node("/root/Eyelink")` within any scope requiring access to
-Eyelink. Within Python this still seems to be required; the `godot-python`
+Eyelink. Within Python this still seems to be required; the `PythonScript`
 readme suggests that an AutoLoad like `Eyelink` should be available directly
 within the `godot` module, but that doesn't seem to work for me. In Python,
 calling `self.get_node("/root/Eyelink")` should work. In any case, the `Eyelink`

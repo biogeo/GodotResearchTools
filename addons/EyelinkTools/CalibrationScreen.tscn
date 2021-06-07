@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://gaze/Circle2D.gd" type="Script" id=1]
-[ext_resource path="res://gaze/Background2D.gd" type="Script" id=2]
-[ext_resource path="res://gaze/CalibrationScreen.gd" type="Script" id=4]
+[ext_resource path="res://addons/EyelinkTools/Circle2D.gd" type="Script" id=1]
+[ext_resource path="res://addons/EyelinkTools/Background2D.gd" type="Script" id=2]
+[ext_resource path="res://addons/EyelinkTools/CalibrationScreen.gd" type="Script" id=4]
 
 [node name="CalibrationScreen" type="Node2D"]
 script = ExtResource( 4 )
